@@ -48,11 +48,24 @@ export default class ApiService {
 
     static async postData(url, data) {
         try {
-        const response = await client.post(constanturl + url, data)
+            const response = await client.post(constanturl + url, data)
             return response.data
         } catch (error) {
             console.log(error);
-            
+
+        }
+    }
+
+    static async postFile(url, formData) {
+        try {
+            const response = await client.post(constanturl + url, formData, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+            });
+            return response.data;
+        } catch (error) {
+            console.error(error);
         }
     }
 
