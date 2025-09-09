@@ -11,9 +11,11 @@ export default function Navbar() {
             }
         })
     },[])
-    function stat(id){
-        const dataString = {_id:id}
-        ApiService.postData('navbar-update-process',dataString).then((res)=>{
+    function stat(_id){
+        // const dataString = {_id:id}
+        console.log(_id);
+        
+        ApiService.getData(`navbar-update-process/${_id}`).then((res)=>{
             if(res.status==="success"){
                 window.location.reload()
             }
@@ -25,11 +27,11 @@ export default function Navbar() {
         // )
     }
 
-    function deletee(id)
+    function deletee(_id)
     {
-        const dataString = {_id:id}
+        // const dataString = {_id:id}
         if (window.confirm("Are you sure you want to delete this item?")) {
-            ApiService.postData('navbar-delete-process',dataString).then((res)=>{
+            ApiService.postData(`navbar-delete-process/${_id}`,dataString).then((res)=>{
                 if (res.status === "success") {
                     window.location.reload()                
                 }

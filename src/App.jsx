@@ -5,6 +5,7 @@ import Dashboard from './Components/Dashboard/Dashboard'
 import Sitesetting from './Components/Site setting/Sitesetting'
 import Navbar from './Components/Navbar/Navbar'
 import Addnav from './Components/Navbar/Addnav'
+import AddMedia from './Components/Media/AddMedia'
 import Media from './Components/Media/Media'
 
 function App() {
@@ -22,7 +23,8 @@ function App() {
                 <Route path='/site-setting' element={<Sitesetting/>}/>
                 <Route path='/menu' element={<Navbar/>}/>
                 <Route path='/add-navitem' element={<Addnav/>}/>
-                <Route path='/media' element={<Media/>}/>
+                <Route path='/all-media' element={<Media/>}/>
+                <Route path='/add-media' element={<AddMedia/>}/>
               </Routes>
             </div>
 

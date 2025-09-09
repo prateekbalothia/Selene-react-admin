@@ -39,7 +39,7 @@ const MenuSideBar = () => {
                         }>
                     <i className="fa fa-tachometer-alt me-2"></i>Menu
                     </NavLink>
-                    <NavLink to="/media" className={({ isActive }) =>
+                    <NavLink to="/all-media" className={({ isActive }) =>
                         isActive ? "nav-item nav-link scrollto active" : "nav-item nav-link scrollto"
                         }>
                     <i className="fa fa-tachometer-alt me-2"></i>Media
