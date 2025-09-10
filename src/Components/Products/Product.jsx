@@ -2,43 +2,44 @@ import { useEffect, useState } from "react"
 import ApiService from "../../Utils/ApiService"
 import { Link } from "react-router-dom"
 
-export default function Navbar() {
-    const [navitem, setNavitem] = useState([])
+
+export default function Product() {
+
+    const [mediafile, setMediafile] = useState([])
+    const [image_upload_path, setimage_upload_path] = useState("")
+
     useEffect(() => {
-        ApiService.getData('navbar').then((res) => {
-            if (res.status == "success") {
-                setNavitem(res.data)
+        ApiService.getData('all-media').then((res) => {
+            if (res.status === "success") {
+                // console.log(res);
+                setMediafile(res.data)
+                setimage_upload_path(res.image_upload_path)
+
             }
         })
-    },[])
-    function stat(_id){
-        // const dataString = {_id:id}
-        console.log(_id);
-        
-        ApiService.getData(`navbar-update-process/${_id}`).then((res)=>{
-            if(res.status==="success"){
+    }, [])
+    // console.log(mediafile)
+
+    function stat(_id) {
+        // const dataString = { _id: id }
+        ApiService.getData(`upload-update-process/${_id}`).then((res) => {
+            if (res.status === "success") {
                 window.location.reload()
             }
         })
-        // setNavitem((prev)=>
-        //     prev.map((item)=>
-        //         item._id == id ? {...item, navbar_status: item.navbar_status === 1?0:1}:item
-        //     )
-        // )
     }
 
-    function deletee(_id)
-    {
+    function deletee(_id) {
+        // const dataString = { _id: id }
         if (window.confirm("Are you sure you want to delete this item?")) {
-            ApiService.getData(`navbar-delete-process/${_id}`).then((res)=>{
+            ApiService.getData(`upload-delete-process/${_id}`).then((res) => {
                 if (res.status === "success") {
-                    window.location.reload()                
+                    window.location.reload()
                 }
             })
-            
+
         }
     }
-
 
     return (
         <>
@@ -47,17 +48,17 @@ export default function Navbar() {
                     <div className="col-12">
                         <div className="page-title-box d-flex justify-content-between align-items-center">
                             <div>
-                                <h4 className="mb-sm-0">Manage Menu</h4>
+                                <h4 className="mb-sm-0">Manage Products</h4>
                                 <div className="user-title-right">
                                     <ol className="breadcrumb m-0">
-                                        <li className="breadcrumb-item"><a href="javascript: void(0);">Manu</a></li>
-                                        <li className="breadcrumb-item active">Manage Menu</li>
+                                        <li className="breadcrumb-item"><a href="javascript: void(0);">Products</a></li>
+                                        <li className="breadcrumb-item active">Manage Products</li>
                                     </ol>
                                 </div>
                             </div>
                             <div>
                                 <button className="btn btn-outline-primary" data-toggle="modal" data-target="#exampleModal"><i
-                                    className="ri-add-line me-2"></i><Link to='/add-navitem'>Add New</Link></button>
+                                    className="ri-add-line me-2"></i><Link to='/add-product'>Add New</Link></button>
                             </div>
                         </div>
                     </div>
@@ -68,7 +69,7 @@ export default function Navbar() {
                             <div className="card-header">
                                 <div className="row align-items-center gy-3">
                                     <div className="col-sm">
-                                        <h5 className="card-title my-1">Menu</h5>
+                                        <h5 className="card-title my-1">All Products</h5>
                                     </div>
                                 </div>
                             </div>
@@ -79,31 +80,31 @@ export default function Navbar() {
                                             <thead>
                                                 <tr>
                                                     <th>S.no.</th>
-                                                    <th>Menu Name</th>
+                                                    <th className="text-center">Preview</th>
+                                                    <th className="text-center">Product Name</th>
                                                     <th className="text-center">Status</th>
                                                     <th className="text-center">Action</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                {navitem.map((item, index) => (
+                                                {/* {mediafile.map((item, index) => (
                                                     <tr key={item._id}>
-                                                        <th>{index+1}</th>
-                                                        <td>{item.navbar_name}</td>
+                                                        <th>{index + 1}</th>
+                                                        <td><img src={image_upload_path + item.filename} alt="img" height='30px' /></td>
+                                                        <td>{item.filename}</td>
                                                         {
-                                                            item.navbar_status == 1 ? (<td className="text-center"><button className="btn"><span
+                                                            item.media_status == 1 ? (<td className="text-center"><button className="btn"><span
                                                                 className="badge bg-success-subtle text-uppercase" onClick={() => stat(item._id)}>Active</span></button>
                                                             </td>) : (<td className="text-center"><button className="btn"><span
                                                                 className="badge bg-danger-subtle text-uppercase" onClick={() => stat(item._id)}>Inactive</span></button>
                                                             </td>)
                                                         }
                                                         <td className="text-center">
-                                                            <a className="btn btn-info btn-sm btnaction" href={`/add-navitem/${item._id}`}><i
-                                                                className="fas fa-pencil-alt"></i></a>
-                                                            <button className="btn btn-danger  btn-sm btnaction" onClick={()=>deletee(item._id)}><i
+                                                            <button className="btn btn-danger  btn-sm btnaction" onClick={() => deletee(item._id)}><i
                                                                 className="fas fa-trash "></i></button>
                                                         </td>
                                                     </tr>
-                                                ))}
+                                                ))} */}
 
                                             </tbody>
                                         </table>
@@ -115,6 +116,7 @@ export default function Navbar() {
                     </div>
                 </div>
             </div>
+
         </>
     )
 }

@@ -1,26 +1,47 @@
-import { useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import ApiService from "../../Utils/ApiService";
+import { useParams } from "react-router-dom";
 
 export default function Addnav() {
+    const slug = useParams()
+    const didmountref = useRef(true)
 
-    const [newMenu,setNewMenu] = useState({
-        navbar_name:null,
-        navbar_slug:null
+    const [newMenu, setNewMenu] = useState({
+        _id:0,
+        navbar_name: "",
+        navbar_slug: ""
     })
+    
+    useEffect(() => {
+        if (didmountref.current) {
 
-    function addMenu(event){
-        const {name,value} = event.target ;
-        setNewMenu((newMenu)=>({
+            if(slug.id !== undefined){
+            ApiService.getData(`navbar-by-id/${slug.id}`).then((res) => {
+                if (res.status === "success") {
+                    setNewMenu(res.data)
+                }
+            })
+        }
+        }
+        didmountref.current = false
+
+    }, [])
+
+
+
+    function addMenu(event) {
+        const { name, value } = event.target;
+        setNewMenu((newMenu) => ({
             ...newMenu,
-            [name]:value
+            [name]: value
         }))
     }
 
-    function saveMenu(){
+    function saveMenu() {
         const dataString = newMenu;
-        ApiService.postData('navbar-add-process',dataString).then((res)=>{
-            if (res.status=="success") {
-                window.location.href='/menu'
+        ApiService.postData('navbar-add-process', dataString).then((res) => {
+            if (res?.status == "success") {
+                window.location.href = '/menu'
                 console.log("Added successfully")
             }
         })
@@ -46,9 +67,8 @@ export default function Addnav() {
                         </div>
                     </div>
                     <div className="row">
-                        <form method="POST" encType="multipart/form-data"
-                        >
-                            <input type="hidden" name="page_id"/>
+                        <form method="POST" encType="multipart/form-data">
+                            <input type="hidden" name={newMenu._id} value="0"/>
                             <div className="card bg-secondary rounded p-2">
                                 <div className="card-header">
                                     <div className="row align-items-center gy-3">
@@ -62,14 +82,14 @@ export default function Addnav() {
                                         <div className="col-lg-12">
                                             <div className="mb-3">
                                                 <label className="form-label">Menu Name: <span style={{ color: "red" }}>*</span></label>
-                                                <input type="text"
+                                                <input type="text" value={newMenu?.navbar_name}
                                                     className="form-control require"
                                                     placeholder="Site Title" id="page_name_id"
-                                                    name="navbar_name" 
-                                                    onChange={(event)=>addMenu(event)}
+                                                    name="navbar_name"
+                                                    onChange={(event) => addMenu(event)}
 
                                                 />
-                                                    
+
 
                                             </div>
                                         </div>
@@ -79,12 +99,12 @@ export default function Addnav() {
                                                 <div className="input-group mb-3">
                                                     <span className="input-group-text page_urls"
                                                         id="basic-addon3">http://selene.com</span>
-                                                    <input 
-                                                        type="text"
+                                                    <input
+                                                        type="text" value={newMenu?.navbar_slug}
                                                         className="form-control required "
-                                                        id="page_url_id" aria-describedby="basic-addon3" 
+                                                        id="page_url_id" aria-describedby="basic-addon3"
                                                         name="navbar_slug"
-                                                        onChange={(event)=>addMenu(event)}
+                                                        onChange={(event) => addMenu(event)}
                                                     />
 
                                                 </div>
@@ -104,47 +124,6 @@ export default function Addnav() {
 
                             </div>
                             <div className="card bg-secondary rounded p-2">
-                                {/* <div className="card-header">
-                                    <div className="row align-items-center gy-3">
-                                        <div className="col-sm">
-                                            <h5 className="card-title my-1">SEO - Meta Tags</h5>
-                                            <p>Define page meta title, meta keywords and meta description to list your page in
-                                                search engines
-
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="card-body justify-content-sm-center">
-                                    <div className="col-lg-12">
-                                        <div className="mb-3">
-                                            <label className="form-label">Page Meta Title: <span style={{ color: "red" }}>*</span></label>
-                                            <input type="text"
-                                                className="form-control required "
-                                                placeholder="Page Meta Title" id="page_meta_title_id" name="page_meta_title"
-                                            />
-
-                                        </div>
-                                    </div>
-                                    <div className="col-lg-12">
-                                        <div className="mb-3">
-                                            <label className="form-label">Page Meta Keyword: </label>
-                                            <input type="text" className="form-control" placeholder="Page Meta Keyword"
-                                                name="page_meta_keyword" id="page_meta_keyword_id" 
-                                            />
-                                        </div>
-                                    </div>
-
-                                    <div className="col-lg-12">
-                                        <div className="mb-3">
-                                            <label className="form-label">Page Meta Description:</label>
-                                            <input type="text" className="form-control" placeholder="Page Meta Desc"
-
-                                                name="page_meta_description" id="page_meta_description_id" />
-                                        </div>
-                                    </div>
-                                </div> */}
-
                                 <div className="card-footer  d-flex justify-content-between">
                                     <button type="button" onClick={saveMenu} id='button' className="btn btn-outline-success"
                                     >Save

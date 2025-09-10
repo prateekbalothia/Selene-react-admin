@@ -44,6 +44,11 @@ const MenuSideBar = () => {
                         }>
                     <i className="fa fa-tachometer-alt me-2"></i>Media
                     </NavLink>
+                    <NavLink to="/all-product" className={({ isActive }) =>
+                        isActive ? "nav-item nav-link scrollto active" : "nav-item nav-link scrollto"
+                        }>
+                    <i className="fa fa-tachometer-alt me-2"></i>Products
+                    </NavLink>
 
                     {/* <div className="nav-item dropdown">
                         <a href="#" className="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i
