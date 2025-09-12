@@ -38,7 +38,7 @@ export default function AddMedia() {
 
     function uploadMedia() {
         const formData = new FormData();
-        formData.append("myfile", upmedia);
+        formData.append("upload_image", upmedia);
         formData.append("media_name", upmedia.name);
         ApiService.postFile('upload', formData).then((res) => {
             if (res.status === "success") {
@@ -60,7 +60,7 @@ export default function AddMedia() {
                                     <form method="post" encType="multipart/form-data">
                                         <label className="form-label" htmlFor="upload">Upload File:</label>
                                         <div className="input-group">
-                                            <input className="form-control" type="file" name="myfile" id="upload" accept="image/png, image/gif, image/jpeg" onChange={(e) => handleMedia(e)} />
+                                            <input className="form-control" type="file" name="upload_image" id="upload" accept="image/png, image/gif, image/jpeg" onChange={(e) => handleMedia(e)} />
                                         </div>
                                         <button type="button" onClick={uploadMedia} className="btn btn-outline-primary">Upload</button>
                                     </form>

@@ -30,6 +30,7 @@ function App() {
                 <Route path='/add-media' element={<AddMedia/>}/>
                 <Route path='/all-product' element={<Product/>}/>
                 <Route path='/add-product' element={<AddProduct/>}/>
+                <Route path='/add-product/:id' element={<AddProduct/>}/>
               </Routes>
             </div>
 

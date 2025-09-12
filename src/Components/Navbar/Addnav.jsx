@@ -43,6 +43,8 @@ export default function Addnav() {
             if (res?.status == "success") {
                 window.location.href = '/menu'
                 console.log("Added successfully")
+            }else{
+                window.alert(res.message)
             }
         })
     }
@@ -68,7 +70,6 @@ export default function Addnav() {
                     </div>
                     <div className="row">
                         <form method="POST" encType="multipart/form-data">
-                            <input type="hidden" name={newMenu._id} value="0"/>
                             <div className="card bg-secondary rounded p-2">
                                 <div className="card-header">
                                     <div className="row align-items-center gy-3">

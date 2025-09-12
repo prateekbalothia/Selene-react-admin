@@ -1,28 +1,29 @@
 import { useEffect, useState } from "react"
 import ApiService from "../../Utils/ApiService"
 import { Link } from "react-router-dom"
+import Constant from "../../Utils/Constant"
 
 
 export default function Product() {
 
-    const [mediafile, setMediafile] = useState([])
+    const [productDetail, setProductDetail] = useState([])
     const [image_upload_path, setimage_upload_path] = useState("")
 
     useEffect(() => {
-        ApiService.getData('all-media').then((res) => {
+        ApiService.getData('all-products').then((res) => {
             if (res.status === "success") {
                 // console.log(res);
-                setMediafile(res.data)
+                setProductDetail(res.data)
                 setimage_upload_path(res.image_upload_path)
 
             }
         })
     }, [])
-    // console.log(mediafile)
+    // console.log(productDetail)
 
     function stat(_id) {
         // const dataString = { _id: id }
-        ApiService.getData(`upload-update-process/${_id}`).then((res) => {
+        ApiService.getData(`product-status-process/${_id}`).then((res) => {
             if (res.status === "success") {
                 window.location.reload()
             }
@@ -32,7 +33,7 @@ export default function Product() {
     function deletee(_id) {
         // const dataString = { _id: id }
         if (window.confirm("Are you sure you want to delete this item?")) {
-            ApiService.getData(`upload-delete-process/${_id}`).then((res) => {
+            ApiService.getData(`product-delete-process/${_id}`).then((res) => {
                 if (res.status === "success") {
                     window.location.reload()
                 }
@@ -57,8 +58,8 @@ export default function Product() {
                                 </div>
                             </div>
                             <div>
-                                <button className="btn btn-outline-primary" data-toggle="modal" data-target="#exampleModal"><i
-                                    className="ri-add-line me-2"></i><Link to='/add-product'>Add New</Link></button>
+                                <Link to='/add-product'><button className="btn btn-outline-primary" data-toggle="modal" data-target="#exampleModal"><i
+                                    className="ri-add-line me-2"></i>Add New</button></Link>
                             </div>
                         </div>
                     </div>
@@ -80,31 +81,34 @@ export default function Product() {
                                             <thead>
                                                 <tr>
                                                     <th>S.no.</th>
-                                                    <th className="text-center">Preview</th>
-                                                    <th className="text-center">Product Name</th>
+                                                    <th>Preview</th>
+                                                    <th>Product Name</th>
+                                                    <th>Size (grams)</th>
                                                     <th className="text-center">Status</th>
                                                     <th className="text-center">Action</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                {/* {mediafile.map((item, index) => (
+                                                {productDetail.map((item, index) => (
                                                     <tr key={item._id}>
                                                         <th>{index + 1}</th>
-                                                        <td><img src={image_upload_path + item.filename} alt="img" height='30px' /></td>
-                                                        <td>{item.filename}</td>
+                                                        <td><img src={item?.product_image != ""?image_upload_path + item.product_image : Constant.default_image} alt="img" height='30px' /></td>
+                                                        <td>{item.product_name}</td>
+                                                        <td>{item.product_quantity_gms}</td>
                                                         {
-                                                            item.media_status == 1 ? (<td className="text-center"><button className="btn"><span
-                                                                className="badge bg-success-subtle text-uppercase" onClick={() => stat(item._id)}>Active</span></button>
-                                                            </td>) : (<td className="text-center"><button className="btn"><span
-                                                                className="badge bg-danger-subtle text-uppercase" onClick={() => stat(item._id)}>Inactive</span></button>
+                                                            item.product_status == 1 ? (<td className="text-center"><button className="btn" onClick={() => stat(item._id)}><span
+                                                                className="badge bg-success-subtle text-uppercase" >Active</span></button>
+                                                            </td>) : (<td className="text-center"><button className="btn" onClick={() => stat(item._id)}><span
+                                                                className="badge bg-danger-subtle text-uppercase" >Inactive</span></button>
                                                             </td>)
                                                         }
                                                         <td className="text-center">
-                                                            <button className="btn btn-danger  btn-sm btnaction" onClick={() => deletee(item._id)}><i
-                                                                className="fas fa-trash "></i></button>
+                                                            <a className="btn btn-info btn-sm btnaction" href={`/add-product/${item._id}`}><i
+                                                                className="fas fa-pencil-alt"></i></a>
+                                                            <a className="btn btn-danger  btn-sm btnaction" onClick={() => deletee(item._id)}><i className="fas fa-trash "></i></a>
                                                         </td>
                                                     </tr>
-                                                ))} */}
+                                                ))}
 
                                             </tbody>
                                         </table>
