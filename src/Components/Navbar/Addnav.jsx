@@ -27,6 +27,25 @@ export default function Addnav() {
 
     }, [])
 
+    function createSlug(str) {
+        return str
+            .toLowerCase() // Convert string to lowercase
+            .replace(/[^\w\s-]/g, '') // Remove non-word characters
+            .trim() // Trim leading/trailing whitespace
+            .replace(/\s+/g, '-') // Replace spaces with -
+            .replace(/--+/g, '-'); // Replace multiple - with single -
+    }
+
+    function slugger(event){
+        setNewMenu((newMenu)=>{
+            const name = newMenu.navbar_name;
+            const nameSlug = createSlug(name)
+            return {
+                ...newMenu,
+                navbar_slug:nameSlug
+            }
+        })
+    }
 
 
     function addMenu(event) {
@@ -38,15 +57,28 @@ export default function Addnav() {
     }
 
     function saveMenu() {
-        const dataString = newMenu;
-        ApiService.postData('navbar-add-process', dataString).then((res) => {
-            if (res?.status == "success") {
-                window.location.href = '/menu'
-                console.log("Added successfully")
-            }else{
-                window.alert(res.message)
+        let required = document.getElementsByClassName("required");
+        let counter = 0
+        for (let i = 0; i < required.length; i++) {
+            if (required[i].value === "") {
+                required[i].style.border = "1px solid red";
+                counter++
             }
-        })
+        }
+        if (counter > 0) {
+            window.alert("⚠️ Please Fill Required Field")
+            return false
+        }else{
+            const dataString = newMenu;
+            ApiService.postData('navbar-add-process', dataString).then((res) => {
+                if (res?.status == "success") {
+                    window.location.href = '/menu'
+                    console.log("Added successfully")
+                }else{
+                    window.alert(res.message)
+                }
+            })
+        }
     }
 
     return (
@@ -84,11 +116,10 @@ export default function Addnav() {
                                             <div className="mb-3">
                                                 <label className="form-label">Menu Name: <span style={{ color: "red" }}>*</span></label>
                                                 <input type="text" value={newMenu?.navbar_name}
-                                                    className="form-control require"
+                                                    className="form-control required"
                                                     placeholder="Site Title" id="page_name_id"
                                                     name="navbar_name"
-                                                    onChange={(event) => addMenu(event)}
-
+                                                    onChange={(event) => {addMenu(event); slugger(event)}}
                                                 />
 
 
@@ -102,7 +133,7 @@ export default function Addnav() {
                                                         id="basic-addon3">http://selene.com</span>
                                                     <input
                                                         type="text" value={newMenu?.navbar_slug}
-                                                        className="form-control required "
+                                                        className="form-control required"
                                                         id="page_url_id" aria-describedby="basic-addon3"
                                                         name="navbar_slug"
                                                         onChange={(event) => addMenu(event)}

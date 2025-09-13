@@ -9,39 +9,38 @@ export default function addProduct() {
     const [image_upload_path, setimage_upload_path] = useState("")
 
     useEffect(() => {
-      if(productDetails.id !== undefined){
-        ApiService.getData(`all-products-by-id/${productDetails.id}`).then((res)=>{
-            if(res.status == "success"){
-                setProductData(res.data)
-                setimage_upload_path(res?.image_upload_path)
-                setProductIamge({"upload_image":res?.data?.product_image})
-            }
-        })
-      }
+        if (productDetails.id !== undefined) {
+            ApiService.getData(`all-products-by-id/${productDetails.id}`).then((res) => {
+                if (res.status == "success") {
+                    setProductData(res.data)
+                    setimage_upload_path(res?.image_upload_path)
+                    setProductIamge({ "upload_image": res?.data?.product_image })
+                }
+            })
+        }
     }, [])
     // console.log(productData);
-    
-    
+
+
 
     const [productImage, setProductIamge] = useState({
-        upload_image: "",
+        upload_image: null,
     })
     // console.log(productImage.upload_image);
-    
+
     const [productData, setProductData] = useState({
-        _id:0,
+        _id: 0,
         product_name: "",
         product_slug: "",
         product_description: "",
         product_quantity: "",
-        product_quantity_gms:"",
+        product_quantity_gms: "",
         product_selling_price: "",
         product_discount_price: "",
         product_mrp: "",
         meta_description: "",
         meta_title: "",
         meta_keyword: "",
-        upload_image: "",
     })
 
     function createSlug(str) {
@@ -129,12 +128,14 @@ export default function addProduct() {
         }
         let reader = new FileReader();
         reader.onload = function (event) {
-                $(".mediaImage").attr("src", event.target.result);
-            };
+            $(".mediaImage").attr("src", event.target.result);
+        };
         reader.readAsDataURL(upload_image);
-        setProductIamge({...productImage,"upload_image":upload_image})
+        setProductIamge({
+            ...productImage,
+            upload_image: upload_image
+        })
     }
-    // console.log(productImage);
 
     function addProduct(event) {
         const { name, value } = event.target;
@@ -148,6 +149,8 @@ export default function addProduct() {
 
 
     function saveProduct() {
+//         console.log(productImage);
+// return false
         let required = document.getElementsByClassName("required");
         let counter = 0
         for (let i = 0; i < required.length; i++) {
@@ -170,7 +173,7 @@ export default function addProduct() {
 
             // append file (only if user selected one)
             if (productImage) {
-                formData.append("upload_image", productImage);
+                formData.append("upload_image", productImage?.upload_image);
             }
             ApiService.postFile('product-add-process', formData).then((res) => {
                 if (res.status === "success") {
@@ -196,7 +199,7 @@ export default function addProduct() {
                                                 <input type="text"
                                                     className="form-control required"
                                                     placeholder="Product Title" id="product_name"
-                                                    name="product_name" 
+                                                    name="product_name"
                                                     value={productData.product_name}
                                                     onChange={(e) => { addProduct(e); slugger(e) }}
                                                     required
@@ -222,12 +225,12 @@ export default function addProduct() {
                                         <div className="col-lg-12 ">
                                             <div className="mb-3">
                                                 <label className="form-label" htmlFor="pd">Product Description:</label>
-                                                <textarea type="text" 
-                                                className="form-control ckeditor bg-dark" 
-                                                placeholder="Product Content" 
-                                                name="product_description" id="pd" 
-                                                value={productData.product_description}
-                                                onChange={(e) => { addProduct(e) }}>
+                                                <textarea type="text"
+                                                    className="form-control ckeditor bg-dark"
+                                                    placeholder="Product Content"
+                                                    name="product_description" id="pd"
+                                                    value={productData.product_description}
+                                                    onChange={(e) => { addProduct(e) }}>
                                                 </textarea>
                                             </div>
                                         </div>
@@ -237,12 +240,12 @@ export default function addProduct() {
                                                     Size: <span style={{ color: "red" }}>*</span>
                                                 </label>
                                                 <select className="form-select required"
-                                                // defaultValue={1}
-                                                style={{border:"1px solid #434141"}}
-                                                id="product_quantity_gms"
-                                                name="product_quantity_gms"
-                                                value={productData.product_quantity_gms}
-                                                onChange={(e)=>{addProduct(e)}}
+                                                    // defaultValue={1}
+                                                    style={{ border: "1px solid #434141" }}
+                                                    id="product_quantity_gms"
+                                                    name="product_quantity_gms"
+                                                    value={productData.product_quantity_gms}
+                                                    onChange={(e) => { addProduct(e) }}
                                                 >
                                                     <option value="">Select Size</option>
                                                     <option value="250gm">250gm</option>
@@ -259,12 +262,12 @@ export default function addProduct() {
                                                     Quantity: <span style={{ color: "red" }}>*</span>
                                                 </label>
                                                 <select className="form-select required"
-                                                // defaultValue={1}
-                                                style={{border:"1px solid #434141"}}
-                                                id="product_quantity"
-                                                name="product_quantity"
-                                                value={productData.product_quantity}
-                                                onChange={(e)=>{addProduct(e)}}
+                                                    // defaultValue={1}
+                                                    style={{ border: "1px solid #434141" }}
+                                                    id="product_quantity"
+                                                    name="product_quantity"
+                                                    value={productData.product_quantity}
+                                                    onChange={(e) => { addProduct(e) }}
                                                 >
                                                     <option value="1">1</option>
                                                     <option value="2">2</option>
@@ -279,52 +282,52 @@ export default function addProduct() {
                                                 </select>
                                             </div>
                                         </div>
-                                        
+
 
                                         <div className="col-lg-4">
                                             <div className="mb-3">
                                                 <label className="form-label" htmlFor="mrp">MRP:<span style={{ color: "red" }}>*</span></label>
-                                                <input className="form-control required" 
-                                                type="number" 
-                                                name="product_mrp" id="mrp" 
-                                                value={productData.product_mrp}
-                                                onChange={(e) => { addProduct(e); sellprice(e) }} />
+                                                <input className="form-control required"
+                                                    type="number"
+                                                    name="product_mrp" id="mrp"
+                                                    value={productData.product_mrp}
+                                                    onChange={(e) => { addProduct(e); sellprice(e) }} />
                                             </div>
                                         </div>
                                         <div className="col-lg-4">
                                             <div className="mb-3">
                                                 <label className="form-label" htmlFor="dis">Discount:<span style={{ color: "red" }}>*</span></label>
-                                                <input className="form-control required" 
-                                                type="number" 
-                                                name="product_discount_price" id="dis" 
-                                                value={productData.product_discount_price} 
-                                                onChange={(e) => { addProduct(e); sellprice(e) }} />
+                                                <input className="form-control required"
+                                                    type="number"
+                                                    name="product_discount_price" id="dis"
+                                                    value={productData.product_discount_price}
+                                                    onChange={(e) => { addProduct(e); sellprice(e) }} />
                                             </div>
                                         </div>
                                         <div className="col-lg-4">
                                             <div className="mb-3">
                                                 <label className="form-label" htmlFor="sp">Selling Price:<span style={{ color: "red" }}>*</span></label>
-                                                <input className="form-control required" 
-                                                type="number" 
-                                                name="product_selling_price" id="sp" 
-                                                value={productData.product_selling_price} 
-                                                onChange={(e) => { addProduct(e) }}/>
-                                                 
+                                                <input className="form-control required"
+                                                    type="number"
+                                                    name="product_selling_price" id="sp"
+                                                    value={productData.product_selling_price}
+                                                    onChange={(e) => { addProduct(e) }} />
+
                                             </div>
                                         </div>
                                         <div className="col-lg-12 fileimg d-flex mb-3">
                                             <div className="col-lg-1">
-                                                <img className="fileimg-preview logoimage mediaImage mt-2" 
-                                                style={{ width: "90%", height: "90%", marginRight: "10px", borderRadius: "5px" }} 
-                                                src={productImage.upload_image != ""?image_upload_path+productImage.upload_image : Constant.default_image} />
+                                                <img className="fileimg-preview logoimage mediaImage mt-2"
+                                                    style={{ width: "90%", height: "90%", marginRight: "10px", borderRadius: "5px" }}
+                                                    src={productImage.upload_image !=null ? image_upload_path + productImage.upload_image : Constant.default_image} />
                                             </div>
                                             <div className="col-lg-11">
                                                 <label className="form-label" htmlFor="upload">Product Image:<span style={{ color: "red" }}>*</span></label>
-                                                <input className="form-control " 
-                                                type="file" 
-                                                name="upload_image" id="upload" 
-                                                accept="image/png, image/gif, image/jpeg" 
-                                                onChange={(e) => { addProductImage(e) }} />
+                                                <input className="form-control "
+                                                    type="file"
+                                                    name="upload_image" id="upload"
+                                                    accept="image/png, image/gif, image/jpeg"
+                                                    onChange={(e) => { addProductImage(e) }} />
                                             </div>
                                         </div>
                                         <div className="col-lg-12">
@@ -333,7 +336,7 @@ export default function addProduct() {
                                                 <input type="text"
                                                     className="form-control required"
                                                     placeholder="Meta Title" id="mt"
-                                                    name="meta_title" 
+                                                    name="meta_title"
                                                     value={productData.meta_title}
                                                     onChange={(e) => { addProduct(e); slugger(e) }}
                                                 />
@@ -346,7 +349,7 @@ export default function addProduct() {
                                                     className="form-control required"
                                                     placeholder="Meta keyword" id="mk"
                                                     value={productData.meta_keyword}
-                                                    name="meta_keyword" 
+                                                    name="meta_keyword"
                                                     onChange={(e) => { addProduct(e) }}
                                                 />
                                             </div>
@@ -354,12 +357,12 @@ export default function addProduct() {
                                         <div className="col-lg-12">
                                             <div className="mb-3">
                                                 <label className="form-label" htmlFor="md">Meta Description:</label>
-                                                <textarea type="text" 
-                                                className="form-control ckeditor bg-dark" 
-                                                placeholder="Meta Description" 
-                                                name="meta_description" id="md" 
-                                                value={productData.meta_description}
-                                                onChange={(e) => { addProduct(e) }}>
+                                                <textarea type="text"
+                                                    className="form-control ckeditor bg-dark"
+                                                    placeholder="Meta Description"
+                                                    name="meta_description" id="md"
+                                                    value={productData.meta_description}
+                                                    onChange={(e) => { addProduct(e) }}>
                                                 </textarea>
                                             </div>
                                         </div>
