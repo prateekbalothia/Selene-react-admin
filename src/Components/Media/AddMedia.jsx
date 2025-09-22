@@ -34,7 +34,7 @@ export default function AddMedia() {
             setUpmedia(fileInput)
         }
     }
-    console.log(upmedia)
+    // console.log(upmedia)
 
     function uploadMedia() {
         const formData = new FormData();

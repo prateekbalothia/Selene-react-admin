@@ -9,6 +9,7 @@ import AddMedia from './Components/Media/AddMedia'
 import Media from './Components/Media/Media'
 import Product from './Components/Products/Product'
 import AddProduct from './Components/Products/AddProduct'
+import Catagory from './Components/Products/Catagory'
 
 function App() {
   
@@ -31,6 +32,7 @@ function App() {
                 <Route path='/all-product' element={<Product/>}/>
                 <Route path='/add-product' element={<AddProduct/>}/>
                 <Route path='/add-product/:id' element={<AddProduct/>}/>
+                <Route path='/product-category' element={<Catagory/>}/>
               </Routes>
             </div>
 

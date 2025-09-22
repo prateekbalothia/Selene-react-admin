@@ -1,6 +1,15 @@
 import { NavLink, useLocation } from "react-router-dom"
 
 const MenuSideBar = () => {
+    const location = useLocation();
+
+    // check if current path starts with /all-page or /add-page
+    const isMenuActive = location.pathname.startsWith("/menu") ||
+        location.pathname.startsWith("/add-navitem");
+    const isMediaActive = location.pathname.startsWith("/all-media") || 
+        location.pathname.startsWith("/add-media");
+    const isproductactive = location.pathname.startsWith("/all-product") ||
+        location.pathname.startsWith("/add-product") || location.pathname.startsWith("/product-category");
 
     return <>
         <div className="sidebar pe-4 pb-3">
@@ -26,29 +35,63 @@ const MenuSideBar = () => {
 
                     <NavLink to="/" className={({ isActive }) =>
                         isActive ? "nav-item nav-link scrollto active" : "nav-item nav-link scrollto"
-                        }>
+                    }>
                         <i className="fa fa-tachometer-alt me-2"></i>Dashboard
                     </NavLink>
                     <NavLink to="/site-setting" className={({ isActive }) =>
                         isActive ? "nav-item nav-link scrollto active" : "nav-item nav-link scrollto"
-                        }>
-                    <i className="fa fa-tachometer-alt me-2"></i>Site setting
+                    }>
+                        <i className="fa fa-tachometer-alt me-2"></i>Site setting
                     </NavLink>
-                    <NavLink to="/menu" className={({ isActive }) =>
-                        isActive ? "nav-item nav-link scrollto active" : "nav-item nav-link scrollto"
-                        }>
-                    <i className="fa fa-tachometer-alt me-2"></i>Menu
-                    </NavLink>
-                    <NavLink to="/all-media" className={({ isActive }) =>
-                        isActive ? "nav-item nav-link scrollto active" : "nav-item nav-link scrollto"
-                        }>
-                    <i className="fa fa-tachometer-alt me-2"></i>Media
-                    </NavLink>
-                    <NavLink to="/all-product" className={({ isActive }) =>
-                        isActive ? "nav-item nav-link scrollto active" : "nav-item nav-link scrollto"
-                        }>
-                    <i className="fa fa-tachometer-alt me-2"></i>Products
-                    </NavLink>
+
+
+                    <div className="nav-item dropdown">
+                        <a href="#" className={`nav-link dropdown-toggle ${isMenuActive ? "active" : ""}`} data-bs-toggle="dropdown">
+                            <i className="fa fa-laptop me-2"></i>Menu
+                        </a>
+                        <div className="dropdown-menu bg-transparent border-0">
+                            <NavLink to="/menu" className={({ isActive }) =>
+                                `dropdown-item ${isActive ? "active" : ""}`
+                            }>All Menu
+                            </NavLink>
+                            <NavLink to="/add-navitem" className={({ isActive }) =>
+                                `dropdown-item ${isActive ? "active" : ""}`
+                            }>Add Menu
+                            </NavLink>
+                        </div>
+                    </div>
+
+                    <div className="nav-item dropdown">
+                        <a href="#" className={`nav-link dropdown-toggle ${isMediaActive ? "active" : ""}`} data-bs-toggle="dropdown">
+                            <i className="fa fa-laptop me-2"></i>Media
+                        </a>
+                        <div className="dropdown-menu bg-transparent border-0">
+                            <NavLink to="/all-media" className={({ isActive }) =>
+                                `dropdown-item ${isActive ? "active" : ""}`
+                            }>All Media
+                            </NavLink>
+                            <NavLink to="/add-media" className={({ isActive }) =>
+                                `dropdown-item ${isActive ? "active" : ""}`
+                            }>Add Media
+                            </NavLink>
+                        </div>
+                    </div>
+
+                    <div className="nav-item dropdown">
+                        <a href="#" className={`nav-link dropdown-toggle ${isproductactive ? "active" : ""}`} data-bs-toggle="dropdown"><i
+                            className="fa fa-shopping-basket me-2"></i>Products</a>
+                        <div className={`dropdown-menu bg-transparent border-0 `}>
+                            <NavLink to="/all-product" className={({ isActive }) =>
+                                `dropdown-item ${isActive ? "active" : ""}`
+                            }>All Products</NavLink>
+                            <NavLink to="/add-product" className={({ isActive }) =>
+                                `dropdown-item ${isActive ? "active" : ""}`
+                            }>Add Product</NavLink>
+                            <NavLink to="/product-category" className={({ isActive }) =>
+                                `dropdown-item ${isActive ? "active" : ""}`
+                            }>Product Category</NavLink>
+                        </div>
+                    </div>
 
                     {/* <div className="nav-item dropdown">
                         <a href="#" className="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i
