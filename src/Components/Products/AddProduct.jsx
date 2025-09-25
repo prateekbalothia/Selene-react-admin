@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import React, { useEffect, useState } from "react"
 import ApiService from "../../Utils/ApiService"
 import { useParams } from "react-router-dom"
 import Constant from "../../Utils/Constant"
@@ -7,27 +7,11 @@ export default function addProduct() {
     const productDetails = useParams()
     // console.log(productDetails.id)
     const [image_upload_path, setimage_upload_path] = useState("")
-
-    useEffect(() => {
-        if (productDetails.id !== undefined) {
-            ApiService.getData(`all-products-by-id/${productDetails.id}`).then((res) => {
-                if (res.status == "success") {
-                    setProductData(res.data)
-                    setimage_upload_path(res?.image_upload_path)
-                    setProductIamge({ "upload_image": res?.data?.product_image })
-                }
-            })
-        }
-    }, [])
-    // console.log(productData);
-
-
-
+    const [categoryData, setCatagoryData] = useState([])
+    const [selectedCats, setSelectedCats] = useState([])
     const [productImage, setProductIamge] = useState({
         upload_image: null,
     })
-    // console.log(productImage.upload_image);
-
     const [productData, setProductData] = useState({
         _id: 0,
         product_name: "",
@@ -41,7 +25,36 @@ export default function addProduct() {
         meta_description: "",
         meta_title: "",
         meta_keyword: "",
+        product_cat_id: selectedCats,
     })
+
+
+    useEffect(() => {
+        ApiService.getData(`all-catagory`).then((res) => {
+            if (res.status === "success") {
+                setCatagoryData(res.data)
+            }
+        })
+    }, [])
+    console.log(categoryData);
+    
+
+
+
+    useEffect(() => {
+        if (productDetails.id !== undefined) {
+            ApiService.getData(`all-products-by-id/${productDetails.id}`).then((res) => {
+                if (res.status == "success") {
+                    setProductData(res.data)
+                    setimage_upload_path(res?.image_upload_path)
+                    setProductIamge({ "upload_image": res?.data?.product_image })
+                    setSelectedCats(res?.data?.product_cat_id.split(",").map(id => id));
+                }
+            })
+        }
+    }, [])
+    // console.log(productData);
+
 
     function createSlug(str) {
         return str
@@ -149,8 +162,8 @@ export default function addProduct() {
 
 
     function saveProduct() {
-//         console.log(productImage);
-// return false
+        // console.log(productData);
+        // return false
         let required = document.getElementsByClassName("required");
         let counter = 0
         for (let i = 0; i < required.length; i++) {
@@ -177,18 +190,53 @@ export default function addProduct() {
             }
             ApiService.postFile('product-add-process', formData).then((res) => {
                 if (res.status === "success") {
-                    console.log(res.data)
-                    // window.location.href = "/all-product"
+                    // console.log(res.data)
+                    window.location.href = "/all-product"
                 }
             })
         }
     }
 
+    function changevalue(event) {
+        if (event.target.name === "product_cat_id") {
+            let id = event.target.id.toString()
+            console.log(id);
+            if (selectedCats.includes(id)) {
+                setSelectedCats((prev) => {
+                    const updated = prev.filter((catid) => catid !== id);
+
+                    setProductData({ ...productData, product_cat_id: updated });
+                    return updated;
+                });
+
+            } else {
+                setSelectedCats((prev) => {
+                    const updated = [...prev, event.target.id];
+                    setProductData({ ...productData, product_cat_id: updated });
+                    return updated;
+                });
+            }
+            // setSelectedCats((prev) => {
+            //         const updated = [...prev, event.target.id];
+            //         setProductData({ ...productData, product_cat_id: updated });
+            //         return updated;
+            //     });
+        }
+
+        // console.log(selectedCats)
+    }
+    useEffect(() => {
+        if (productData?.product_cat_id) {
+            setSelectedCats(productData.product_cat_id.map(id => id.toString()));
+        }
+    }, [productData]);
+
+
     return (
         <>
             <div className="container-fluid pt-4 px-4">
                 <div className="row">
-                    <div className="col-lg-12">
+                    <div className="col-lg-8">
                         <div className="mb-3">
                             <div style={{ width: "100%" }}>
                                 <form method="post" encType="multipart/form-data">
@@ -319,11 +367,11 @@ export default function addProduct() {
                                             <div className="col-lg-1">
                                                 <img className="fileimg-preview logoimage mediaImage mt-2"
                                                     style={{ width: "90%", height: "90%", marginRight: "10px", borderRadius: "5px" }}
-                                                    src={productImage.upload_image !=null ? image_upload_path + productImage.upload_image : Constant.default_image} />
+                                                    src={productImage.upload_image != null ? image_upload_path + productImage.upload_image : Constant.default_image} />
                                             </div>
                                             <div className="col-lg-11">
                                                 <label className="form-label" htmlFor="upload">Product Image:<span style={{ color: "red" }}>*</span></label>
-                                                <input className="form-control "
+                                                <input className="form-control"
                                                     type="file"
                                                     name="upload_image" id="upload"
                                                     accept="image/png, image/gif, image/jpeg"
@@ -366,11 +414,80 @@ export default function addProduct() {
                                                 </textarea>
                                             </div>
                                         </div>
-                                        <div className="col">
+                                        {/* <div className="col">
                                             <button type="button" onClick={saveProduct} className="btn btn-outline-primary">Save</button>
-                                        </div>
+                                        </div> */}
                                     </div>
                                 </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="col-lg-4">
+                        <div className="card bg-secondary rounded p-2 mb-2">
+                            <div className="card-header">
+                                <div className="row align-items-center gy-3">
+                                    <div className="col-sm">
+                                        <h5 className="card-title my-1">Publish</h5>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="card-body justify-content-sm-center bordered">
+                                <div className="row">
+                                    <div className="col-lg-12">
+                                        <div className="mb-3">
+                                            <button type="button" id="button" className="btn btn-success"
+                                                onClick={saveProduct}
+                                            >
+                                                Publish
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="card bg-secondary rounded p-2 mb-2">
+                            <div className="card-header">
+                                <h5>Category<span style={{ color: "red" }}>*</span></h5>
+                            </div>
+                            <div className="card-body justify-content-sm-center bordered">
+                                <div className="row">
+                                    <div className="col-lg-12">
+                                        <div className="mb-3">
+                                            <p style={{ lineHeight: "20px" }}><small className="text-muted">Select category in which you want to display this blog. You can also select multiple categories for this blog.</small></p>
+                                            <div style={{ height: "250px", overflowX: "hidden", border: "1px solid #5d5959", padding: "10px", background: " #414141" }}>
+
+                                                {categoryData && categoryData.length > 0  ?
+                                                    categoryData.filter((value) => value.cat_status === 1).map((value, index) =>
+                                                        <React.Fragment key={index}>
+                                                            <div className="form-check form-check-inline"
+                                                                style={{ width: "100%", marginBottom: "10px", marginLeft: "0px", cursor: "pointer" }}>
+                                                                <input
+                                                                    className="form-check-input required"
+                                                                    style={{ cursor: "pointer" }}
+                                                                    type="checkbox"
+                                                                    id={value?._id.toString()}
+                                                                    name="product_cat_id"
+                                                                    onChange={(event) => changevalue(event)}
+                                                                    checked={selectedCats.includes(value._id.toString())}
+                                                                />
+                                                                <label className="form-check-label"
+                                                                    style={{ cursor: "pointer" }}
+                                                                    htmlFor={value?._id.toString()}>
+                                                                    {value?.cat_name}
+                                                                </label>
+                                                            </div>
+                                                        </React.Fragment>
+                                                        
+                                                    )
+                                                    : <></>}
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="col-lg-12">
+                                        <a href="product-category"> <span><i className="ri-add-line me-2"></i></span> Add New Category</a>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

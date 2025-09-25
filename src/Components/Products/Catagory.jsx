@@ -95,6 +95,20 @@ export default function Catagory() {
         })
     }
 
+    function deleteconfirm(id){
+        const isConfirmed = window.confirm("⚠️ Are You Sure You Want To Delete Catagory?")
+        if (!isConfirmed) {
+            return false
+        }
+        ApiService.getData(`catagory-delete-process/${id}`).then((res)=>{
+            if (res.status === "success") {
+                window.alert("✅ "+res.message)
+                window.location.href = '/product-category'
+                
+            }
+        })
+    }
+
 return (
     <>
         <div className="page-content">

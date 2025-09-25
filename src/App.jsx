@@ -10,6 +10,7 @@ import Media from './Components/Media/Media'
 import Product from './Components/Products/Product'
 import AddProduct from './Components/Products/AddProduct'
 import Catagory from './Components/Products/Catagory'
+import SliderAndBanner from './Components/Navbar/SliderAndBanner'
 
 function App() {
   
@@ -27,6 +28,7 @@ function App() {
                 <Route path='/menu' element={<Navbar/>}/>
                 <Route path='/add-navitem' element={<Addnav/>}/>
                 <Route path='/add-navitem/:id' element={<Addnav/>}/>
+                <Route path='/slider-and-banner' element={<SliderAndBanner/>}/>
                 <Route path='/all-media' element={<Media/>}/>
                 <Route path='/add-media' element={<AddMedia/>}/>
                 <Route path='/all-product' element={<Product/>}/>

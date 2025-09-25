@@ -58,6 +58,11 @@ const MenuSideBar = () => {
                                 `dropdown-item ${isActive ? "active" : ""}`
                             }>Add Menu
                             </NavLink>
+                            <NavLink to="/slider-and-banner" className={({ isActive }) =>
+                                `dropdown-item ${isActive ? "active" : ""}`
+                            }>Slider and Banner
+                            </NavLink>
+                            
                         </div>
                     </div>
 
