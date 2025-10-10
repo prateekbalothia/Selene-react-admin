@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react"
 import Constant from "../../Utils/Constant";
 import ApiService from "../../Utils/ApiService";
+import { toast } from "react-toastify";
 
 export default function SliderAndBanner() {
     const [slider, setSlider] = useState({
@@ -70,14 +71,18 @@ export default function SliderAndBanner() {
             }
         }
         if (counter > 0) {
-            window.alert("Please Fill Required Field")
+            toast.error("Please Fill Required Field",{position:"bottom-center"})
             return false
         } else {
             console.log(slider);
+            const formData = new FormData();
+            Object.entries(slider).forEach(([key, value]) => {
+                formData.append(key, value);
+            });
 
-            ApiService.postFile('add-slider-process', slider).then((res) => {
+            ApiService.postFile('add-slider-process', formData).then((res) => {
                 if (res.status === "success") {
-                    console.log(res.message);
+                    window.location.href = "/slider-and-banner"
                 }
             })
 
@@ -94,11 +99,28 @@ export default function SliderAndBanner() {
     }
 
     function editSlider(id) {
+        ApiService.getData(`slider-by-id/${id}`).then((res) => {
+            if (res.status === "success") {
+                // console.log(res)
+                setSlider(res.data)
+                setimage_upload_path(res.image_upload_path)
+                setSlider({...res.data,upload_image:res.data.slider_image})
 
+            }
+        })  
     }
+    // console.log(image_upload_path+slider.upload_image);
+    
 
     function deleteconfirm(id) {
-
+        if (window.confirm("⚠️ Are you sure you want to delete this item?")) {
+            ApiService.getData(`slider-delete-process/${id}`).then((res)=>{
+            if (res.status === "success") {
+                toast.success(res.message)
+                window.location.href = "/slider-and-banner"
+            }
+        })
+        }
     }
 
 
@@ -147,7 +169,7 @@ export default function SliderAndBanner() {
                                                         onChange={(event) => { handlechange(event); }}
                                                         placeholder="Slider Name"
                                                         id='slider_name_id'
-                                                        // value={formdata?.cat_name}
+                                                        value={slider?.slider_name}
                                                         name="slider_name" />
 
                                                 </div>
@@ -157,17 +179,17 @@ export default function SliderAndBanner() {
                                                 <div className="mb-3">
                                                     <label className="form-label">Slider Description: <span style={{ color: "red" }}>*</span></label>
                                                     <textarea type="text"
-                                                        className="form-control required " placeholder="Slider Description"
+                                                        className="form-control" placeholder="Slider Description"
                                                         onChange={(event) => { handlechange(event); }}
                                                         id="slider-description-id"
-                                                        // value={formdata?.cat_slug}
+                                                        value={slider?.slider_description}
                                                         name="slider_description" ></textarea>
 
                                                 </div>
                                             </div>
-                                            <div className="col-lg-12 fileimg d-flex mb-3">
+                                            <div className="col-lg-12 fileimg d-flex flex-column mb-3">
 
-                                                <div className="col-lg-11">
+                                                <div className="col-lg-12">
                                                     <label className="form-label" htmlFor="upload">Product Image:<span style={{ color: "red" }}>*</span></label>
                                                     <input className="form-control"
                                                         type="file"
@@ -175,11 +197,11 @@ export default function SliderAndBanner() {
                                                         accept="image/png, image/gif, image/jpeg"
                                                         onChange={(e) => { handleimg(e) }} />
                                                 </div>
-                                                <div className="col-lg-1">
+                                                <div className="col-lg-6">
                                                     <img className="fileimg-preview logoimage mediaImage mt-2"
                                                         style={{ width: "90%", height: "90%", marginRight: "10px", borderRadius: "5px" }}
-                                                        src={Constant.default_image}
-                                                    // src={productImage.upload_image != null ? image_upload_path + productImage.upload_image : Constant.default_image} 
+                                                        // src={Constant.default_image}
+                                                    src={slider.upload_image !== null ? image_upload_path + slider.upload_image : Constant.default_image} 
 
                                                     />
                                                 </div>

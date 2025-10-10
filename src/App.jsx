@@ -11,32 +11,34 @@ import Product from './Components/Products/Product'
 import AddProduct from './Components/Products/AddProduct'
 import Catagory from './Components/Products/Catagory'
 import SliderAndBanner from './Components/Navbar/SliderAndBanner'
+import { ToastContainer } from 'react-toastify'
 
 function App() {
-  
+
 
 
   return (
     <>
       <BrowserRouter>
-        
-            <MenuBar />
-            <div className="content">
-              <Routes>
-                <Route path='/' element={<Dashboard/>}/>
-                <Route path='/site-setting' element={<Sitesetting/>}/>
-                <Route path='/menu' element={<Navbar/>}/>
-                <Route path='/add-navitem' element={<Addnav/>}/>
-                <Route path='/add-navitem/:id' element={<Addnav/>}/>
-                <Route path='/slider-and-banner' element={<SliderAndBanner/>}/>
-                <Route path='/all-media' element={<Media/>}/>
-                <Route path='/add-media' element={<AddMedia/>}/>
-                <Route path='/all-product' element={<Product/>}/>
-                <Route path='/add-product' element={<AddProduct/>}/>
-                <Route path='/add-product/:id' element={<AddProduct/>}/>
-                <Route path='/product-category' element={<Catagory/>}/>
-              </Routes>
-            </div>
+
+        <MenuBar />
+        <div className="content">
+          <ToastContainer />
+          <Routes>
+            <Route path='/' element={<Dashboard />} />
+            <Route path='/site-setting' element={<Sitesetting />} />
+            <Route path='/menu' element={<Navbar />} />
+            <Route path='/add-navitem' element={<Addnav />} />
+            <Route path='/add-navitem/:id' element={<Addnav />} />
+            <Route path='/slider-and-banner' element={<SliderAndBanner />} />
+            <Route path='/all-media' element={<Media />} />
+            <Route path='/add-media' element={<AddMedia />} />
+            <Route path='/all-product' element={<Product />} />
+            <Route path='/add-product' element={<AddProduct />} />
+            <Route path='/add-product/:id' element={<AddProduct />} />
+            <Route path='/product-category' element={<Catagory />} />
+          </Routes>
+        </div>
 
       </BrowserRouter>
     </>

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react"
 import ApiService from "../../Utils/ApiService"
 import { useParams } from "react-router-dom"
 import Constant from "../../Utils/Constant"
+import { toast } from "react-toastify"
 
 export default function addProduct() {
     const productDetails = useParams()
@@ -173,7 +174,7 @@ export default function addProduct() {
             }
         }
         if (counter > 0) {
-            window.alert("Please Fill Required Field")
+            toast.error("Please Fill Required Field")
             return false
         } else {
 
